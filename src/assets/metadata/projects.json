@@ -1,0 +1,71 @@
+{
+  "BEACON": {
+    "title": "Beacon",
+    "text": [],
+    "drawings": [
+      "beacon_concept_detail.jpeg",
+      "beacon_concept_main.jpg",
+      "beacon_concept_sketch.jpg",
+      "beacon_first_floor_plan.jpg",
+      "beacon_ground_floor_plan.jpg",
+      "beacon_section_aa.jpg",
+      "beacon_section_bb.jpg",
+      "beacon_section_cc.jpg",
+      "beacon_site_location.jpg",
+      "beacon_site_location_plan.png",
+      "beacon_site_section.png"
+    ],
+    "photographs": [
+      "beacon_external_details.jpg",
+      "beacon_interior_detail.jpg",
+      "beacon_interior_main.jpg",
+      "beacon_interior_space.jpg",
+      "beacon_lounge.jpg",
+      "beacon_street_view.jpg"
+    ],
+    "photographs_portraits": [
+      "beacon_conference_room.jpg",
+      "beacon_entrance.jpg",
+      "beacon_landscape_detail.jpg",
+      "beacon_landscape_garden.jpg",
+      "beacon_landscape_main.jpg",
+      "beacon_landscape_view.jpg",
+      "beacon_night_view.jpg",
+      "beacon_reading_corner.jpg",
+      "beacon_verandah.jpg"
+    ],
+    "videos": ["beacon_long_video.mp4", "beacon_short_video.mp4"]
+  },
+  "BALRAM_RESIDENCE": {
+    "title": "Balram Residence",
+    "text": [],
+    "drawings": [
+      "balram_residence_first_floor_plan.jpg",
+      "balram_residence_ground_floor_plan.jpg",
+      "balram_residence_office_block_plan.jpg",
+      "balram_residence_section_aa.jpg",
+      "balram_residence_section_bb.jpg",
+      "balram_residence_site_plan.jpg"
+    ],
+    "photographs": [
+      "balram_residence_aerial.jpg",
+      "balram_residence_balcony.jpg",
+      "balram_residence_bedroom_court.jpg",
+      "balram_residence_court_corridor.jpg",
+      "balram_residence_dining_kitchen.jpg",
+      "balram_residence_elevation.jpg",
+      "balram_residence_entrance.jpg",
+      "balram_residence_exterior_main.jpg",
+      "balram_residence_exterior_view.jpg",
+      "balram_residence_landscape.jpg",
+      "balram_residence_night_view.jpg",
+      "balram_residence_office_block.jpg"
+    ],
+    "photographs_portraits": [
+      "balram_residence_exterior_detail.jpg",
+      "balram_residence_master_bedroom.jpg",
+      "balram_residence_office_interior.jpg"
+    ],
+    "videos": ["balram_residence_stopmotion.mkv"]
+  }
+}

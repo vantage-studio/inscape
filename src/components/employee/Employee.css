@@ -1,0 +1,391 @@
+/* Modal Overlay */
+.employee-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #212d8e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(1px);
+  mix-blend-mode: multiply;
+  z-index: 13;
+  animation: overlayFadeIn 0.5s ease forwards;
+  transition: none;
+  cursor: pointer;
+}
+
+/* Main Content Container */
+.employee-content-container {
+  height: 100%;
+  overflow-x: auto;
+  animation: contentSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin: right center;
+  position: fixed;
+  z-index: 14;
+  opacity: 1;
+  transform: scale(1);
+  transition: none;
+  cursor: pointer;
+  top: 0;
+  right: 0;
+}
+
+.employee-content {
+  position: relative;
+  background: white;
+  padding: 0 2.3vw;
+  width: 40vw;
+  height: auto;
+  margin: 2.3vw 0;
+  margin-right: 7.6vw;
+  float: right;
+  cursor: default;
+}
+
+/* Employee Header Section */
+.employee-designation {
+  font-size: 18px;
+  font-family: Graphik, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  padding-top: 2vw;
+  padding-bottom: 1.6vw;
+  margin-bottom: 2.3vw;
+}
+
+.employee-name {
+  font-size: 64px;
+  padding: 1.8vw 0 7vw;
+}
+
+/* Employee Image */
+.employee-image {
+  width: 100%;
+  margin: 2vw 0;
+}
+
+.employee-image img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+/* Employee Description Section */
+.employee-description-container {
+  padding: 6vw 0 12vw;
+}
+
+.employee-description {
+  font-size: 42px;
+  letter-spacing: -0.04em;
+  font-family: Optima;
+}
+
+/* Employee Details Layout */
+.employee-other-details {
+  display: flex;
+  gap: 2vw;
+  margin-top: 7vw;
+}
+
+/* Nationality Section */
+.employee-Nationality {
+  flex: 0 0 30%;
+}
+
+.employee-Nationality div {
+  font-size: 0.9vw;
+  color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 0.5vw;
+  font-weight: 600;
+}
+
+.employee-Nationality span {
+  font-size: 1vw;
+  color: rgba(0, 0, 0, 0.4);
+  font-weight: 400;
+}
+
+/* Additional Information Section */
+.employee-other-info {
+  flex: 1;
+}
+
+.employee-other-info p {
+  margin-top: 0;
+  margin-bottom: 1.5vw;
+  font-size: 1vw;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+/* Social Links */
+.employee-social-links {
+  margin-top: 2vw;
+  display: flex;
+  gap: 2vw;
+}
+
+/* Animated Link Style */
+.animated-link {
+  position: relative;
+  color: rgba(0, 0, 0, 0.8);
+  text-decoration: none;
+  font-size: 18px;
+  padding-bottom: 0.2vw;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.animated-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  transition: width 0.3s ease;
+}
+
+.animated-link:hover::after {
+  width: 100%;
+}
+
+/* Featured Projects Section */
+.employee-featured-projects {
+  margin-top: 4vw;
+  padding-top: 4vw;
+  padding-bottom: 8.6vw;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.employee-featured-projects-title {
+  font-size: 1.2vw;
+  margin-bottom: 1.5vw;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+/* Scrollable Projects List */
+.employee-featured-projects-list {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  gap: 1.5vw;
+  padding-bottom: 1vw;
+  cursor: grab; /* Indicates scrollable content */
+}
+
+.employee-featured-projects-list:active {
+  cursor: grabbing; /* Visual feedback while scrolling */
+}
+
+/* Project Item Styles */
+.employee-featured-projects-item {
+  flex: 0 0 auto;
+  width: 15vw;
+}
+
+/* Project Image Container with Hover Effect */
+.employee-featured-projects-image {
+  width: 100%;
+  height: 20vw;
+  border-radius: 4px;
+  margin-bottom: 0.8vw;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.employee-featured-projects-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* Hover Animations */
+.employee-featured-projects-item:hover
+  .employee-featured-projects-image::after {
+  transform: scale(1.1);
+}
+
+.employee-featured-projects-item:hover .employee-featured-projects-name {
+  color: rgba(0, 0, 0, 0.8);
+  transition: color 0.3s ease;
+}
+
+.employee-featured-projects-name {
+  font-size: 0.9vw;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* Custom Scrollbar Styling */
+.employee-featured-projects-list::-webkit-scrollbar {
+  height: 4px;
+}
+
+.employee-featured-projects-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+.employee-featured-projects-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.employee-featured-projects-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Project Images */
+.employee-featured-projects-item:nth-child(1)
+  .employee-featured-projects-image::after {
+  background-image: url("https://static.powerhouse-company.com/wp-content/uploads/2019/03/05074546/Powerhouse-Company-Villa-1-52-300x300.jpg");
+}
+
+.employee-featured-projects-item:nth-child(2)
+  .employee-featured-projects-image::after {
+  background-image: url("https://static.powerhouse-company.com/wp-content/uploads/2019/11/01125951/Powerhouse-Company-Villa-B-01-300x300.jpg");
+}
+
+.employee-featured-projects-item:nth-child(3)
+  .employee-featured-projects-image::after {
+  background-image: url("https://static.powerhouse-company.com/wp-content/uploads/2022/01/27090345/Powerhouse-Company-Penthouse-West-00-300x300.jpg");
+}
+
+.employee-featured-projects-item:nth-child(4)
+  .employee-featured-projects-image::after {
+  background-image: url("https://static.powerhouse-company.com/wp-content/uploads/2022/05/04082134/Powerhouse-Company-FOR-01-300x300.jpg");
+}
+
+.employee-featured-projects-item:nth-child(5)
+  .employee-featured-projects-image::after {
+  background-image: url("https://static.powerhouse-company.com/wp-content/uploads/2022/09/20085347/Jakoba-Mulderhuis-01-300x300.jpg");
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 1024px) {
+  /* Tablet Layout Adjustments */
+  .employee-content {
+    width: auto;
+    padding: 0 3.5vw;
+    margin: 14vw 3.5vw 3.5vw;
+    clear: both;
+    float: unset;
+  }
+
+  /* Typography Adjustments */
+  .employee-designation {
+    font-size: 14px;
+    padding: 9vw 0 4.3vw;
+    margin-bottom: 6.6vw;
+  }
+
+  .employee-name {
+    font-size: 48px;
+    padding: 5vw 13vw 22vw 0;
+  }
+
+  .employee-description {
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 1.1;
+    position: relative;
+    letter-spacing: -0.03em;
+  }
+
+  /* Stack Details on Tablet */
+  .employee-other-details {
+    flex-direction: column;
+  }
+
+  /* Adjust Font Sizes */
+  .employee-Nationality span,
+  .employee-Nationality div {
+    font-weight: 400;
+    font-size: 12px;
+  }
+
+  .employee-other-info p,
+  .animated-link {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Mobile Layout Adjustments */
+  .employee-featured-projects {
+    padding-top: 6vw;
+    padding-bottom: 12vw;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+  }
+
+  /* Mobile Typography */
+  .employee-featured-projects-title {
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+}
+
+/* Animation Keyframes */
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes overlayFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes contentSlideOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/* Exit Animation Classes */
+.employee-overlay.exit {
+  animation: overlayFadeOut 0.5s ease forwards;
+}
+
+.employee-content-container.exit {
+  animation: contentSlideOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}

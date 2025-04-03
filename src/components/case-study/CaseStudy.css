@@ -1,0 +1,270 @@
+.showcase-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: overlayFadeIn 0.5s ease forwards;
+  transition: none;
+}
+
+.showcase-container {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  animation: contentSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  transform-origin: right center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1001;
+  opacity: 1;
+  transform: scale(1);
+  transition: none;
+  background: #ffffff;
+}
+
+.showcase-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+}
+
+.showcase-close {
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  background: none;
+  border: none;
+  color: black;
+  font-size: 48px;
+  cursor: pointer;
+  z-index: 1002;
+  padding: 10px;
+  line-height: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.showcase-close:hover {
+  opacity: 0.7;
+}
+
+.showcase-image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+}
+
+.showcase-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  animation: imageFadeIn 0.5s ease 0.3s forwards;
+}
+
+.showcase-loading {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  z-index: 1003;
+}
+
+.loading-text {
+  color: black;
+  font-size: 24px;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+    background: #ffffff;
+  }
+  to {
+    opacity: 1;
+    background: #ffffff;
+  }
+}
+
+@keyframes contentSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+    background: #ffffff;
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    background: #ffffff;
+  }
+}
+
+@keyframes imageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes overlayFadeOut {
+  from {
+    opacity: 1;
+    background: #ffffff;
+  }
+  to {
+    opacity: 0;
+    background: #ffffff;
+  }
+}
+
+@keyframes contentSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+    background: #ffffff;
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+    background: #ffffff;
+  }
+}
+
+.showcase-overlay.exit {
+  animation: overlayFadeOut 0.5s ease forwards;
+}
+
+.showcase-container.exit {
+  animation: contentSlideOut 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.case-study-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.case-study-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1001;
+  animation: fadeIn 0.3s ease-out;
+  background: #000;
+  overflow: hidden;
+}
+
+.case-study-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+  z-index: 1002;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+}
+
+.case-study-close:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+.case-study-content {
+  width: 100%;
+  height: 120vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.case-study-image-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 120vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin: 0;
+  padding: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.case-study-overlay.exit {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+.case-study-container.exit {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .case-study-close {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+}
+
+body.case-study-open {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+}
