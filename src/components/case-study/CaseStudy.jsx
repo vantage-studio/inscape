@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import "./CaseStudy.css";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useMetadata } from "../../store/MetadataStore";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -25,6 +26,28 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   const containerRef = useRef(null);
   const isClosingRef = useRef(false);
   const progressCircleRef = useRef(null);
+
+  // Get metadata store hooks
+  const { getProject } = useMetadata();
+
+  // Extract project key from image name (get first two parts for project key)
+  const projectKey = imageName?.split("_").slice(0, 2).join("_").toUpperCase();
+  const projectData = getProject(projectKey);
+
+  // Add debug logs
+  console.log("Image Name:", imageName);
+  console.log("Project Key:", projectKey);
+  console.log("Project Data:", projectData);
+
+  // Get random text from project data
+  const randomText = projectData?.text
+    ? projectData.text[Math.floor(Math.random() * projectData.text.length)]
+    : "";
+  const projectTitle = projectData?.title || "";
+
+  // Log final values
+  console.log("Project Title:", projectTitle);
+  console.log("Selected Text:", randomText);
 
   // Add body class when component mounts
   useEffect(() => {
@@ -218,19 +241,17 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
           </button>
         </div>
         <div className="case-study-content">
+          <div className="case-study-text-wrapper">
+            <span className="case-study-subtitle">{projectTitle}</span>
+            <h2 className="case-study-heading">{randomText}</h2>
+          </div>
           <div className="case-study-image-container-wrapper">
             <div
               className="case-study-image-container"
               style={{ backgroundImage: `url(${imagePath})` }}
             />
           </div>
-          <div className="case-study-additional-content">
-            <div style={{ minHeight: "200vh", padding: "2rem" }}>
-              <h2>Additional Content</h2>
-              <p>Scroll down to see the progress...</p>
-              <div style={{ height: "150vh", background: "#f5f5f5" }}></div>
-            </div>
-          </div>
+          <div className="case-study-additional-content"></div>
         </div>
       </div>
     </>

@@ -1,7 +1,13 @@
 {
   "BEACON": {
     "title": "Beacon",
-    "text": [],
+    "text": [
+      "Reinventing an Icon",
+      "A Beacon in Timber",
+      "The Law of Attraction",
+      "Peak Experience",
+      "Symphony of Tones"
+    ],
     "drawings": [
       "beacon_concept_detail.jpeg",
       "beacon_concept_main.jpg",
@@ -38,7 +44,13 @@
   },
   "BALRAM_RESIDENCE": {
     "title": "Balram Residence",
-    "text": [],
+    "text": [
+      "Perfectly Engineered",
+      "Neighborhood Innovation",
+      "The Luxury of Space",
+      "Showing Our Stripes",
+      "The Grace of the Grid"
+    ],
     "drawings": [
       "balram_residence_first_floor_plan.jpg",
       "balram_residence_ground_floor_plan.jpg",
