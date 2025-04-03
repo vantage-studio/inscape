@@ -12,9 +12,6 @@ const dynamicImages = import.meta.glob(
   }
 );
 
-// Add debug log to see available images
-console.log("Available image paths in metadata:", Object.keys(dynamicImages));
-
 const AnimatedTitle = () => {
   const canvasRef = useRef(null);
   const titleRef = useRef(null);

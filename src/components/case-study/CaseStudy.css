@@ -163,7 +163,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
   z-index: 1000;
   animation: fadeIn 0.3s ease-out;
 }
@@ -175,9 +174,11 @@
   right: 0;
   bottom: 0;
   z-index: 1001;
-  animation: fadeIn 0.3s ease-out;
-  background: #000;
-  overflow: hidden;
+  overflow-y: scroll !important;
+  -webkit-overflow-scrolling: touch;
+  height: 100vh;
+  background: #ffffff;
+  scroll-behavior: auto;
 }
 
 .case-study-close {
@@ -187,42 +188,141 @@
   width: 48px;
   height: 48px;
   border: none;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 32px;
+  background: transparent;
   cursor: pointer;
   z-index: 1002;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
-  border-radius: 50%;
 }
 
-.case-study-close:hover {
-  background: rgba(0, 0, 0, 0.8);
-  transform: scale(1.1);
+.close-button-wrapper {
+  position: fixed;
+  bottom: calc(20 / 3 * 1vw);
+  right: calc(10 / 3 * 1vw);
+  width: 48px;
+  height: 48px;
+  z-index: 17;
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 0.35s cubic-bezier(0.86, 0, 0.07, 1);
 }
 
-.case-study-content {
-  width: 100%;
-  height: 120vh;
+@media only screen and (min-width: 768px) {
+  .close-button-wrapper {
+    top: calc(15 / 4.3 * 1vw);
+    right: calc(15 / 4.3 * 1vw);
+    bottom: auto;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .close-button-wrapper {
+    top: calc(10 / 4.3 * 1vw);
+    right: calc(5 / 4.3 * 1vw);
+  }
+}
+
+.close-button {
+  width: 48px;
+  height: 48px;
   position: relative;
-  overflow: hidden;
+  padding: 0;
+  border: none;
+  background: #f2f2f2;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background 0.3s ease;
+  overflow: visible;
 }
 
-.case-study-image-container {
+.close-button:hover {
+  background: #e1e2e3;
+}
+
+.close-icon {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+}
+
+.close-icon::before,
+.close-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 100%;
-  height: 120vh;
+  height: 2px;
+  background: #000;
+}
+
+.close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.close-progress {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  transform: rotate(-90deg);
+}
+
+.close-progress circle {
+  transform-origin: center;
+  transition: stroke-dashoffset 0.05s linear;
+  stroke: #000000;
+  stroke-width: 3;
+  stroke-linecap: round;
+  fill: none;
+  will-change: stroke-dashoffset;
+}
+
+.close-button:hover .close-progress {
+  opacity: 1;
+}
+
+.case-study-content {
+  position: relative;
+  width: 100%;
+  min-height: 200vh;
+  background-color: #ffffff;
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+}
+.case-study-image-container-wrapper {
+  transition: none;
+  padding: 0;
+  will-change: padding;
+}
+
+@media screen and (max-width: 768px) {
+  .case-study-image-container-wrapper {
+    padding: 0 !important;
+  }
+}
+
+.case-study-image-container {
+  position: relative;
+  /* width: 100%; */
+  height: 140vh;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   margin: 0;
-  padding: 0;
+  transform: none;
 }
 
 @keyframes fadeIn {
@@ -261,10 +361,19 @@
   }
 }
 
-body.case-study-open {
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
+.case-study-image {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-out;
+  opacity: 0;
+  transform: scale(0.98);
+}
+
+.case-study-image.loaded {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.case-study-additional-content {
+  min-height: 150vh;
+  padding: 2rem;
+  background-color: #f5f5f5;
 }
