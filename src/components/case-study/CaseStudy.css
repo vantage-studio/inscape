@@ -308,7 +308,7 @@
   will-change: padding;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
   .case-study-image-container-wrapper {
     padding: 0 !important;
   }
