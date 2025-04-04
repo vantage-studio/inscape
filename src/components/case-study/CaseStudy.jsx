@@ -219,60 +219,63 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   useEffect(() => {
     const circle = progressCircleRef.current;
     const container = containerRef.current;
+    const content = container?.querySelector(".case-study-content");
+    const imageWrapper = container?.querySelector(
+      ".case-study-image-container-wrapper"
+    );
 
-    if (circle && container) {
-      const radius = 22;
-      const circumference = Math.PI * radius * 2;
+    if (!circle || !container || !content || !imageWrapper) return;
 
-      // Set initial state
-      circle.style.strokeDasharray = `${circumference}`;
-      circle.style.strokeDashoffset = `${circumference}`;
+    const radius = 22;
+    const circumference = Math.PI * radius * 2;
 
-      let ticking = false;
-      const handleScroll = () => {
-        if (!ticking) {
-          requestAnimationFrame(() => {
-            const scrollPercentage =
-              container.scrollTop /
-              (container.scrollHeight - container.clientHeight);
-            const progress = Math.min(Math.max(scrollPercentage, 0), 1);
+    // Set initial circle properties
+    gsap.set(circle, {
+      strokeDasharray: circumference,
+      strokeDashoffset: circumference,
+    });
 
-            // Update circle progress
-            const offset = circumference * (1 - progress);
-            circle.style.strokeDasharray = `${circumference}`;
-            circle.style.strokeDashoffset = `${offset}`;
+    // Create ScrollTrigger for circle progress
+    const circleTrigger = ScrollTrigger.create({
+      trigger: content,
+      start: "top top",
+      end: "bottom bottom",
+      scroller: container,
+      scrub: 1,
+      onUpdate: (self) => {
+        // Calculate progress
+        const progress = self.progress;
 
-            // Update circle visibility
-            const progressElement = circle.closest(".close-progress");
-            if (progressElement) {
-              progressElement.style.opacity = progress > 0 ? 1 : 0;
-            }
+        // Update circle progress
+        const offset = circumference - progress * circumference;
+        circle.style.strokeDashoffset = offset;
 
-            // Update padding with even more aggressive scaling
-            const imageWrapper = container.querySelector(
-              ".case-study-image-container-wrapper"
-            );
-            if (imageWrapper) {
-              const maxPadding = 36;
-              // Scale progress by 4x to reach max padding much earlier
-              const scaledProgress = Math.min(progress * 4, 1);
-              const paddingValue = maxPadding * scaledProgress;
-              imageWrapper.style.padding = `${paddingValue}px`;
-            }
-
-            ticking = false;
-          });
-          ticking = true;
+        // Update circle visibility
+        const progressElement = circle.closest(".close-progress");
+        if (progressElement) {
+          progressElement.style.opacity = progress > 0 ? 1 : 0;
         }
-      };
+      },
+    });
 
-      container.addEventListener("scroll", handleScroll, { passive: true });
-      handleScroll(); // Initial call
+    // Create ScrollTrigger for image wrapper padding
+    const paddingTrigger = ScrollTrigger.create({
+      trigger: content,
+      start: "top top",
+      end: "10% top",
+      scroller: container,
+      scrub: true,
+      onUpdate: (self) => {
+        const padding = Math.min(36, self.progress * 36);
+        gsap.set(imageWrapper, { padding });
+      },
+    });
 
-      return () => {
-        container.removeEventListener("scroll", handleScroll);
-      };
-    }
+    // Cleanup
+    return () => {
+      circleTrigger.kill();
+      paddingTrigger.kill();
+    };
   }, []);
 
   useEffect(() => {

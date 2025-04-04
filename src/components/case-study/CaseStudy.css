@@ -509,12 +509,11 @@
 
 .case-study-additional-content {
   min-height: auto;
-  max-width: 1600px;
-  width: 100%;
   margin: 0 auto;
   background-color: #ffffff;
   overflow: hidden;
   box-sizing: border-box;
+  margin: 36px;
 }
 
 .case-study-additional-content h1 {
