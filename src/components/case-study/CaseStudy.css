@@ -1224,7 +1224,13 @@
 
 @media only screen and (min-width: 1024px) {
   .image-wrapper {
-    height: 120vh;
+    height: 100vh;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .text-movable-wrapper {
+    --enable-animation: false;
+    transform: none !important;
   }
 }
 
@@ -1361,5 +1367,83 @@
   }
   .text-content:not(:first-child) {
     margin-top: 4.4vw;
+  }
+}
+
+.standalone-quote {
+  width: 100%;
+  margin-top: 96px;
+  position: relative;
+  padding-right: 0px;
+}
+
+@media only screen and (min-width: 1024px) {
+  .standalone-quote {
+    width: 80%;
+  }
+}
+
+.quote-content {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.quote-content p {
+  font-family: Optima, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+  position: relative;
+  margin: 0;
+}
+
+@media only screen and (min-width: 1024px) {
+  .quote-content p {
+    font-size: 3.35917vw;
+  }
+}
+
+.quote-content p::before {
+  content: "\2018";
+  position: absolute;
+  top: 0;
+  left: -0.35em;
+}
+
+.quote-footer {
+  margin-top: 15px;
+}
+
+@media only screen and (min-width: 1024px) {
+  .quote-footer {
+    margin-top: 1.16279vw;
+  }
+}
+
+.quote-author {
+  font-family: Graphik, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0;
+  font-style: normal;
+}
+
+@media only screen and (min-width: 1024px) {
+  .quote-author {
+    font-size: 1.03359vw;
+  }
+}
+
+@media (max-width: 1548px) {
+  .quote-author {
+    font-size: 14px;
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1548px) {
+  .quote-author {
+    font-size: 16px;
   }
 }

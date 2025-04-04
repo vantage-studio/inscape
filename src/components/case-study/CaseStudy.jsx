@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Update the glob pattern to look in metadata project directories
 const images = import.meta.glob(
-  "../../assets/metadata/**/photographs/*.{jpg,jpeg,png,webp}",
+  "../../assets/metadata/**/photographs{,_portraits}/*.{jpg,jpeg,png,webp}",
   {
     eager: true,
     query: "?url",
@@ -38,6 +38,7 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   const progressCircleRef = useRef(null);
   const textBlockRef = useRef(null);
   const [activeTab, setActiveTab] = useState("info");
+  const [randomPortraitImages, setRandomPortraitImages] = useState([]);
 
   // Get metadata store hooks
   const { getProject, metadata } = useMetadata();
@@ -216,6 +217,36 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
     }
   }, [imagePath, imageName, handleClose]);
 
+  // Get random portrait image
+  const getRandomPortraitImage = useCallback((projectData) => {
+    if (!projectData?.photographs_portraits?.length) return null;
+
+    const randomPortrait =
+      projectData.photographs_portraits[
+        Math.floor(Math.random() * projectData.photographs_portraits.length)
+      ];
+
+    const imagePath = Object.entries(images).find(([path]) =>
+      path.toLowerCase().includes(randomPortrait.toLowerCase())
+    )?.[1];
+
+    return imagePath || null;
+  }, []);
+
+  // Set random portrait images on mount
+  useEffect(() => {
+    if (projectData) {
+      // Generate two different random images
+      const image1 = getRandomPortraitImage(projectData);
+      let image2;
+      do {
+        image2 = getRandomPortraitImage(projectData);
+      } while (image2 === image1); // Ensure we get a different image
+
+      setRandomPortraitImages([image1, image2]);
+    }
+  }, [projectData, getRandomPortraitImage]);
+
   useEffect(() => {
     const circle = progressCircleRef.current;
     const container = containerRef.current;
@@ -243,14 +274,10 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
       scroller: container,
       scrub: 1,
       onUpdate: (self) => {
-        // Calculate progress
         const progress = self.progress;
-
-        // Update circle progress
         const offset = circumference - progress * circumference;
         circle.style.strokeDashoffset = offset;
 
-        // Update circle visibility
         const progressElement = circle.closest(".close-progress");
         if (progressElement) {
           progressElement.style.opacity = progress > 0 ? 1 : 0;
@@ -271,10 +298,82 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
       },
     });
 
+    // Create ScrollTriggers for each text-movable-wrapper
+    const textWrappers = container.querySelectorAll(".text-movable-wrapper");
+    const textTriggers = [];
+
+    const updateTextAnimations = () => {
+      textWrappers.forEach((wrapper, index) => {
+        const textContainer = wrapper.closest(".text-container");
+        if (!textContainer) return;
+
+        // Recalculate heights
+        const containerHeight = textContainer.offsetHeight;
+        const wrapperHeight = wrapper.offsetHeight;
+        const maxTranslation = Math.max(
+          0,
+          containerHeight - wrapperHeight - 100
+        );
+
+        // Update or create trigger
+        if (textTriggers[index]) {
+          textTriggers[index].kill();
+        }
+
+        const textTrigger = ScrollTrigger.create({
+          trigger: textContainer,
+          start: "top 80%",
+          end: "bottom 20%",
+          scroller: container,
+          scrub: 1,
+          onUpdate: (self) => {
+            const progress = Math.min(Math.max(self.progress, 0), 1);
+            const y = Math.min(maxTranslation * progress, maxTranslation);
+
+            gsap.set(wrapper, {
+              y: y,
+              force3D: true,
+            });
+
+            // Add bounds check
+            if (y >= maxTranslation) {
+              wrapper.style.transform = `translateY(${maxTranslation}px)`;
+            }
+          },
+        });
+
+        textTriggers[index] = textTrigger;
+      });
+    };
+
+    // Initial setup
+    updateTextAnimations();
+
+    // Add resize handler
+    const handleResize = gsap
+      .delayedCall(0.1, () => {
+        updateTextAnimations();
+        ScrollTrigger.refresh();
+      })
+      .pause();
+
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize.restart(true);
+    });
+
+    // Observe container and each text wrapper
+    resizeObserver.observe(container);
+    textWrappers.forEach((wrapper) => {
+      resizeObserver.observe(wrapper);
+    });
+
     // Cleanup
     return () => {
       circleTrigger.kill();
       paddingTrigger.kill();
+      textTriggers.forEach((trigger) => trigger?.kill());
+      resizeObserver.disconnect();
+      handleResize.kill();
     };
   }, []);
 
@@ -689,7 +788,9 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
                     <div
                       className="background-image visible"
                       style={{
-                        backgroundImage: `url(https://static.powerhouse-company.com/wp-content/uploads/2019/12/15092315/Powerhouse-Company-Chalet-B-05-683x1024.jpg)`,
+                        backgroundImage: `url(${
+                          randomPortraitImages[0] || ""
+                        })`,
                       }}
                     />
                     <div className="image-caption right visible">
@@ -698,7 +799,7 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
                   </div>
                 </div>
                 <div className="text-container">
-                  <div>
+                  <div className="text-movable-wrapper">
                     <h2 className="content-block-title desktop">
                       <div className="title-wrapper desktop">
                         <div>Making an Entrance</div>
@@ -713,6 +814,72 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
                           a section of the road approaching the chalet lifts to
                           allow cars to enter, then closes invisibly behind
                           them.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="standalone-quote">
+              <blockquote className="quote-content">
+                <p>
+                  Together with our client, we upped our ambition during the
+                  design process resulting in a carbon neutral, completely
+                  circular, and BREEAM Outstanding design.'
+                </p>
+                <footer className="quote-footer">
+                  <cite className="quote-author">Janneke van der Velden</cite>
+                </footer>
+              </blockquote>
+            </div>
+            <div className="content-block">
+              <h2 className="content-block-title mobile">
+                <div className="title-wrapper mobile">
+                  <div>Intelligent Design</div>
+                </div>
+              </h2>
+              <div className="content-block-container">
+                <div className="image-container">
+                  <div className="image-wrapper">
+                    <div
+                      className="background-image visible"
+                      style={{
+                        backgroundImage: `url(${
+                          randomPortraitImages[1] || ""
+                        })`,
+                      }}
+                    />
+                    <div className="image-caption right visible">
+                      <div>Educational spaces of and for the 21st century</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-container">
+                  <div className="text-movable-wrapper">
+                    <h2 className="content-block-title desktop">
+                      <div className="title-wrapper desktop">
+                        <div>Intelligent Design</div>
+                      </div>
+                    </h2>
+                    <div className="text-content">
+                      <div className="animated-text-block">
+                        <p>
+                          We're proud to boast a BREEAM Outstanding certificate
+                          and achieving nearly energy neutrality. Not only have
+                          we delivered a wooden educational building, but we
+                          have also captured the essence of intelligent design.
+                          Every material has been carefully chosen and placed,
+                          allowing us to create not just a physical structure
+                          but also a monument to smart choices and
+                          sustainability. A well-insulated building envelope
+                          does the rest for a passive contribution to low energy
+                          usage. For this purpose, a special material has been
+                          chosen: the insulation partly consists of recycled
+                          denim jeans. Textile waste that would otherwise be
+                          incinerated is now used to create cotton insulation.
+                          It is sustainable and has proven to be an excellent
+                          way to improve the building's acoustic comfort.
                         </p>
                       </div>
                     </div>
