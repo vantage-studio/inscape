@@ -40,7 +40,7 @@
       "beacon_reading_corner.jpg",
       "beacon_verandah.jpg"
     ],
-    "videos": ["beacon_long_video.mp4", "beacon_short_video.mp4"]
+    "videos": ["beacon_short_video.mp4"]
   },
   "BALRAM_RESIDENCE": {
     "title": "Balram Residence",
@@ -78,6 +78,6 @@
       "balram_residence_master_bedroom.jpg",
       "balram_residence_office_interior.jpg"
     ],
-    "videos": ["balram_residence_stopmotion.mkv"]
+    "videos": ["beacon_short_video.mp4"]
   }
 }
