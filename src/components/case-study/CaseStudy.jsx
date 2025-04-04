@@ -26,6 +26,7 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   const containerRef = useRef(null);
   const isClosingRef = useRef(false);
   const progressCircleRef = useRef(null);
+  const textBlockRef = useRef(null);
 
   // Get metadata store hooks
   const { getProject } = useMetadata();
@@ -208,6 +209,28 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const options = {
+      root: containerRef.current,
+      threshold: 0.2,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, options);
+
+    if (textBlockRef.current) {
+      observer.observe(textBlockRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   if (!imagePath) {
     return null;
   }
@@ -251,7 +274,34 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
               style={{ backgroundImage: `url(${imagePath})` }}
             />
           </div>
-          <div className="case-study-additional-content"></div>
+          <div className="case-study-additional-content">
+            <div className="text-content-block">
+              <div className="text-wrapper">
+                <div className="animated-text-block" ref={textBlockRef}>
+                  <p>
+                    Marga Klompé Building is the first college building in
+                    Europe to be entirely constructed from solid wood. The new,
+                    nearly energy-neutral complex is situated on a plot of land
+                    measuring 33 x 33 meters, within the forested campus of
+                    Tilburg University. The building accommodates a foyer, 1
+                    auditorium, 13 lecture halls, and self-study spaces for
+                    approximately 1,000 students. Set within a wooded landscape,
+                    the building's timeless form echoes the existing Modernist
+                    structures on the campus.
+                  </p>
+                  {/* <p>
+                    <img
+                      loading="lazy"
+                      src="https://static.powerhouse-company.com/wp-content/uploads/2019/12/25094728/Group-216.jpg"
+                      alt="Building view"
+                      width="593"
+                      height="341"
+                    />
+                  </p> */}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -505,7 +505,8 @@
 .case-study-additional-content {
   min-height: 100vh;
   padding: 0;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
+  margin: 0 32px;
 }
 
 .case-study-additional-content h1 {
@@ -540,4 +541,68 @@
   line-height: 1.35;
   letter-spacing: -0.03em;
   color: #ffffff;
+}
+
+.text-content-block {
+  font-family: Graphik, Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  margin-left: 48px;
+}
+
+.text-wrapper {
+  position: relative;
+}
+
+.text-wrapper a {
+  cursor: pointer;
+  display: inline-block;
+  z-index: 1;
+  color: #000;
+}
+
+.animated-text-block {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+
+.animated-text-block.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animated-text-block p {
+  margin-bottom: 2rem;
+}
+
+.animated-text-block img {
+  max-width: 100%;
+  height: auto;
+  margin: 2rem 0;
+}
+
+@media only screen and (min-width: 1024px) {
+  .text-content-block {
+    font-size: 1.8vw;
+    margin-right: 2.7vw;
+    margin-left: auto;
+    width: 40vw;
+  }
+
+  .animated-text-block p:has(img) {
+    display: inline-grid;
+    gap: 1rem;
+    width: 100%;
+    grid-auto-flow: column;
+  }
+
+  .animated-text-block p:has(img) img {
+    max-width: 100%;
+    height: auto;
+  }
 }
