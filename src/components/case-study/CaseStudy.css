@@ -1149,12 +1149,14 @@
   font-size: 36px;
   line-height: 1.1;
   letter-spacing: -0.04em;
+  margin: 0 0 24px 0;
 }
 
 @media only screen and (min-width: 1024px) {
   .content-block-title {
     font-size: 4.1vw;
     line-height: 1.02;
+    margin: 0;
   }
 }
 
@@ -1189,7 +1191,7 @@
 }
 
 .title-wrapper.desktop {
-  max-width: 50%;
+  max-width: 70%;
 }
 
 .content-block-container {
@@ -1203,8 +1205,8 @@
 @media only screen and (min-width: 1024px) {
   .content-block-container {
     display: grid;
-    grid-template-columns: 48% 48%;
-    gap: 4%;
+    grid-template-columns: 50% 35%;
+    gap: 15%;
     align-items: flex-start;
   }
 }
