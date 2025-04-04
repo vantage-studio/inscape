@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./CaseStudy.css";
 import gsap from "gsap";
@@ -18,6 +18,16 @@ const images = import.meta.glob(
   }
 );
 
+// Add video file imports
+const videos = import.meta.glob(
+  "../../assets/metadata/**/videos/*.{mp4,webm,ogg}",
+  {
+    eager: true,
+    query: "?url",
+    import: "default",
+  }
+);
+
 const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   const navigate = useNavigate();
   const { imageId } = useParams(); // Get image name from URL params
@@ -27,6 +37,7 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   const isClosingRef = useRef(false);
   const progressCircleRef = useRef(null);
   const textBlockRef = useRef(null);
+  const [activeTab, setActiveTab] = useState("info");
 
   // Get metadata store hooks
   const { getProject } = useMetadata();
@@ -46,9 +57,30 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
     : "";
   const projectTitle = projectData?.title || "";
 
+  // Get random video from project data and find its path
+  const randomVideo = projectData?.videos
+    ? projectData.videos[Math.floor(Math.random() * projectData.videos.length)]
+    : "";
+
+  // Find the video path if it's a local file
+  const videoPath = Object.entries(videos).find(([path]) => {
+    if (!path) return false;
+    const normalizedPath = path.toLowerCase();
+    const normalizedVideo = String(randomVideo).toLowerCase();
+    return normalizedPath.includes(normalizedVideo);
+  })?.[1];
+
+  // Check if it's a Vimeo ID or a video file
+  const isVimeoId = randomVideo && /^\d+$/.test(randomVideo);
+  const isVideoFile = randomVideo && /\.(mp4|webm|ogg)$/i.test(randomVideo);
+
   // Log final values
   console.log("Project Title:", projectTitle);
   console.log("Selected Text:", randomText);
+  console.log("Selected Video:", randomVideo);
+  console.log("Video Path:", videoPath);
+  console.log("Is Vimeo ID:", isVimeoId);
+  console.log("Is Video File:", isVideoFile);
 
   // Add body class when component mounts
   useEffect(() => {
@@ -289,15 +321,315 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
                     the building's timeless form echoes the existing Modernist
                     structures on the campus.
                   </p>
-                  {/* <p>
-                    <img
-                      loading="lazy"
-                      src="https://static.powerhouse-company.com/wp-content/uploads/2019/12/25094728/Group-216.jpg"
-                      alt="Building view"
-                      width="593"
-                      height="341"
-                    />
-                  </p> */}
+                </div>
+              </div>
+            </div>
+
+            <div className="video-section">
+              <div className="video-container">
+                <div className="video-wrapper">
+                  <div
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {isVimeoId ? (
+                      <iframe
+                        src={`https://player.vimeo.com/video/${randomVideo}?title=0&byline=0&portrait=0&muted=1&autopause=0&controls=0&loop=1&app_id=122963`}
+                        width="426"
+                        height="240"
+                        frameBorder="0"
+                        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                        title={`${projectTitle} video`}
+                      />
+                    ) : isVideoFile && videoPath ? (
+                      <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      >
+                        <source
+                          src={videoPath}
+                          type={`video/${randomVideo.split(".").pop()}`}
+                        />
+                      </video>
+                    ) : null}
+                  </div>
+                </div>
+                <div className="video-overlay"></div>
+                <div className="video-filter"></div>
+                <button className="expand-button">
+                  <div className="expand-icon"></div>
+                </button>
+              </div>
+            </div>
+            <div className="project-info">
+              <div className="project-info-tabs">
+                <div>
+                  <button
+                    className={`tab-button ${
+                      activeTab === "info" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("info")}
+                  >
+                    Key info
+                  </button>
+                  <button
+                    className={`tab-button ${
+                      activeTab === "team" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("team")}
+                  >
+                    Team
+                  </button>
+                  <button
+                    className={`tab-button ${
+                      activeTab === "collaborators" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveTab("collaborators")}
+                  >
+                    Collaborators
+                  </button>
+                </div>
+              </div>
+              <div className="project-info-content" style={{ height: "148px" }}>
+                <div
+                  className="info-panel"
+                  style={{
+                    opacity: activeTab === "info" ? 1 : 0,
+                    transitionDelay: "0.45s",
+                    pointerEvents: activeTab === "info" ? "auto" : "none",
+                    userSelect: activeTab === "info" ? "auto" : "none",
+                  }}
+                >
+                  <div className="info-grid">
+                    <div className="info-grid-left">
+                      <div className="info-item">
+                        <span>Budget</span>Confidential
+                      </div>
+                      <div className="info-item">
+                        <span>Time span</span>2015 - 2017
+                      </div>
+                      <div className="info-item">
+                        <span>Size</span>1 000 m²
+                      </div>
+                      <div className="info-item">
+                        <span>Status</span>Completed
+                      </div>
+                      <div className="info-item">
+                        <span>Location</span>St. Moritz, CH
+                      </div>
+                      <div className="info-item">
+                        <span>Type</span>Living
+                      </div>
+                    </div>
+                    <div className="info-grid-right">
+                      <div className="info-item-large">
+                        <span>Client</span>
+                        <div>Confidential</div>
+                      </div>
+                      <div className="info-item-large">
+                        <span>Partners in charge</span>
+                        <div>Nanne de Ru, Sander Apperlo</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="team-panel"
+                  style={{
+                    opacity: activeTab === "team" ? 1 : 0,
+                    transitionDelay: "0.45s",
+                    pointerEvents: activeTab === "team" ? "auto" : "none",
+                    userSelect: activeTab === "team" ? "auto" : "none",
+                  }}
+                >
+                  <div className="team-section">
+                    <div className="team-group">
+                      <span className="team-title">Partner in charge</span>
+                      <div className="team-members">
+                        <div className="member-list">
+                          <div className="member-item">
+                            <div className="member-image">
+                              <img
+                                alt=""
+                                src="https://static.powerhouse-company.com/wp-content/uploads/2020/01/24093921/Powerhouse-Compnay-Sander-Apperlo-300x300.jpg"
+                              />
+                            </div>
+                            <button type="button" className="member-name">
+                              Sander Apperlo
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="team-group">
+                      <span className="team-title">Project lead</span>
+                      <div className="team-members">
+                        <div className="member-list">
+                          <div className="member-item">
+                            <div className="member-image">
+                              <img
+                                alt=""
+                                src="https://static.powerhouse-company.com/wp-content/uploads/2019/12/11152631/Powerhouse-Company-Nanne-de-Ru-300x300.jpg"
+                              />
+                            </div>
+                            <button type="button" className="member-name">
+                              Nanne de Ru
+                            </button>
+                          </div>
+                          <div className="member-item">
+                            <div className="member-image">
+                              <img
+                                alt=""
+                                src="https://static.powerhouse-company.com/wp-content/uploads/2020/01/24093921/Powerhouse-Compnay-Sander-Apperlo-300x300.jpg"
+                              />
+                            </div>
+                            <button type="button" className="member-name">
+                              Sander Apperlo
+                            </button>
+                          </div>
+                          <div>Charles Bessard</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="team-group large">
+                      <span className="team-title">Project team</span>
+                      <div className="team-members">
+                        <div className="member-list">
+                          <div className="member-item">
+                            <div className="member-image">
+                              <img
+                                alt=""
+                                src="https://static.powerhouse-company.com/wp-content/uploads/2019/12/11152631/Powerhouse-Company-Nanne-de-Ru-300x300.jpg"
+                              />
+                            </div>
+                            <button type="button" className="member-name">
+                              Nanne de Ru
+                            </button>
+                          </div>
+                          <div className="member-item">
+                            <div className="member-image">
+                              <img
+                                alt=""
+                                src="https://static.powerhouse-company.com/wp-content/uploads/2020/01/24093921/Powerhouse-Compnay-Sander-Apperlo-300x300.jpg"
+                              />
+                            </div>
+                            <button type="button" className="member-name">
+                              Sander Apperlo
+                            </button>
+                          </div>
+                          <div>Marco Overwijk</div>
+                          <div>Amber Peters</div>
+                          <div>Charles Bessard</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="collaborators-panel"
+                  style={{
+                    opacity: activeTab === "collaborators" ? 1 : 0,
+                    transitionDelay: "0.45s",
+                    pointerEvents:
+                      activeTab === "collaborators" ? "auto" : "none",
+                    userSelect: activeTab === "collaborators" ? "auto" : "none",
+                  }}
+                >
+                  <div className="collaborator-list">
+                    <div className="collaborator-item">
+                      <div className="collaborator-title">Co-architect</div>
+                      <div>
+                        <div>
+                          <a
+                            href="https://www.chiavi-architektur.ch/"
+                            className="collaborator-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Fulvio Chiavi Architektur AG
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="collaborator-item">
+                      <div className="collaborator-title">
+                        Interior architect
+                      </div>
+                      <div>
+                        <div>
+                          <a
+                            href="https://www.liaigre.com/en/"
+                            className="collaborator-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Liaigre
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="collaborator-item">
+                      <div className="collaborator-title">
+                        Lighting consultant
+                      </div>
+                      <div>
+                        <div>
+                          <a
+                            href="https://www.isometrix.co.uk/"
+                            className="collaborator-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Isometrix Lighting and Design
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="collaborator-item">
+                      <div className="collaborator-title">Photography</div>
+                      <div>
+                        <div>
+                          <a
+                            href="https://www.sebastianvandamme.nl/"
+                            className="collaborator-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Sebastian van Damme
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="collaborator-item">
+                      <div className="collaborator-title">Videography</div>
+                      <div>
+                        <div>
+                          <a
+                            href="https://www.marcelijzerman.com/"
+                            className="collaborator-link"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Marcel IJzerman
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
