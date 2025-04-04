@@ -40,10 +40,20 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   const [activeTab, setActiveTab] = useState("info");
 
   // Get metadata store hooks
-  const { getProject } = useMetadata();
+  const { getProject, metadata } = useMetadata();
 
-  // Extract project key from image name (get first two parts for project key)
-  const projectKey = imageName?.split("_").slice(0, 2).join("_").toUpperCase();
+  // Find project key by checking which project contains the image
+  const projectKey = Object.keys(metadata || {}).find((key) => {
+    const project = metadata[key];
+    return (
+      (project.photographs &&
+        project.photographs.some((photo) => photo.includes(imageName))) ||
+      (project.photographs_portraits &&
+        project.photographs_portraits.some((photo) =>
+          photo.includes(imageName)
+        ))
+    );
+  });
   const projectData = getProject(projectKey);
 
   // Add debug logs
@@ -51,10 +61,34 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   console.log("Project Key:", projectKey);
   console.log("Project Data:", projectData);
 
-  // Get random text from project data
-  const randomText = projectData?.text
-    ? projectData.text[Math.floor(Math.random() * projectData.text.length)]
-    : "";
+  // Get text based on image index
+  const getTextForImage = (imageName, projectData) => {
+    if (!projectData) return "";
+
+    // Find the index of the image in photographs or photographs_portraits
+    const photoIndex =
+      projectData.photographs?.findIndex((photo) =>
+        photo.includes(imageName)
+      ) ?? -1;
+    const portraitIndex =
+      projectData.photographs_portraits?.findIndex((photo) =>
+        photo.includes(imageName)
+      ) ?? -1;
+
+    // Get the total index (if image is in portraits, add length of photographs)
+    const totalIndex =
+      photoIndex >= 0
+        ? photoIndex
+        : portraitIndex >= 0
+        ? portraitIndex + (projectData.photographs?.length || 0)
+        : 0;
+
+    // Use modulo to cycle through available texts
+    const textIndex = totalIndex % (projectData.text?.length || 1);
+    return projectData.text?.[textIndex] || "";
+  };
+
+  const selectedText = getTextForImage(imageName, projectData);
   const projectTitle = projectData?.title || "";
 
   // Get random video from project data and find its path
@@ -76,7 +110,7 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
 
   // Log final values
   console.log("Project Title:", projectTitle);
-  console.log("Selected Text:", randomText);
+  console.log("Selected Text:", selectedText);
   console.log("Selected Video:", randomVideo);
   console.log("Video Path:", videoPath);
   console.log("Is Vimeo ID:", isVimeoId);
@@ -242,23 +276,30 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
   }, []);
 
   useEffect(() => {
-    const options = {
-      root: containerRef.current,
-      threshold: 0.2,
-    };
+    const textBlocks = document.querySelectorAll(".animated-text-block");
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, options);
+    // Add will-animate class immediately
+    textBlocks.forEach((element) => {
+      element.classList.add("will-animate");
+    });
 
-    if (textBlockRef.current) {
-      observer.observe(textBlockRef.current);
-    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove("will-animate");
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      {
+        threshold: 0.05,
+        root: null,
+        rootMargin: "0px",
+      }
+    );
+
+    textBlocks.forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
   }, []);
@@ -298,7 +339,7 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
         <div className="case-study-content">
           <div className="case-study-text-wrapper">
             <span className="case-study-subtitle">{projectTitle}</span>
-            <h2 className="case-study-heading">{randomText}</h2>
+            <h2 className="case-study-heading">{selectedText}</h2>
           </div>
           <div className="case-study-image-container-wrapper">
             <div
@@ -633,6 +674,50 @@ const CaseStudy = ({ imageName: propImageName, onClose, onBeforeClose }) => {
                 </div>
               </div>
             </div>
+            <div className="content-block">
+              <h2 className="content-block-title mobile">
+                <div className="title-wrapper mobile">
+                  <div>Making an Entrance</div>
+                </div>
+              </h2>
+              <div className="content-block-container">
+                <div className="image-container">
+                  <div className="image-wrapper">
+                    <div
+                      className="background-image visible"
+                      style={{
+                        backgroundImage: `url(https://static.powerhouse-company.com/wp-content/uploads/2019/12/15092315/Powerhouse-Company-Chalet-B-05-683x1024.jpg)`,
+                      }}
+                    />
+                    <div className="image-caption right visible">
+                      <div>Spectacular views of the Swiss Alps</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-container">
+                  <div>
+                    <h2 className="content-block-title desktop">
+                      <div className="title-wrapper desktop">
+                        <div>Making an Entrance</div>
+                      </div>
+                    </h2>
+                    <div className="text-content">
+                      <div className="animated-text-block">
+                        <p>
+                          Custom designed and engineered in partnership with a
+                          German car elevator company, the disappearing entrance
+                          to the garage evokes a scenef from a James Bond film –
+                          a section of the road approaching the chalet lifts to
+                          allow cars to enter, then closes invisibly behind
+                          them.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="test"></div>
           </div>
         </div>
       </div>
